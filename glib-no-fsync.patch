@@ -1,0 +1,10 @@
+--- glib-2.20.1/configure.in~	2009-04-30 04:32:59.000000000 -0700
++++ glib-2.20.1/configure.in	2009-04-30 04:32:59.000000000 -0700
+@@ -563,7 +563,6 @@
+ AC_CHECK_FUNCS(posix_memalign)
+ AC_CHECK_FUNCS(memalign)
+ AC_CHECK_FUNCS(valloc)
+-AC_CHECK_FUNCS(fsync)
+ 
+ AC_CHECK_FUNCS(atexit on_exit)
+ 
