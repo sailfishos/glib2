@@ -5,20 +5,20 @@
 %define libdir /%{_lib}
 
 Name:           glib2
-Version:        2.28.8
+Version:        2.30.2
 Release:        1
 License:        LGPLv2+
 Summary:        A library of handy utility functions
 Url:            http://www.gtk.org
 Group:          System/Libraries
-Source0:        http://download.gnome.org/sources/glib/2.28/glib-%{version}.tar.bz2
-Source1:        http://download.gnome.org/sources/glib/2.28/glib-%{version}.sha256sum
+Source0:        http://download.gnome.org/sources/glib/2.30/glib-%{version}.tar.bz2
+Source1:        http://download.gnome.org/sources/glib/2.30/glib-%{version}.sha256sum
 Source2:        glib2.sh
 Source3:        glib2.csh
 Source101:      %{name}-rpmlintrc
 
 Patch1:         glib-2.24.0-syslog-message-handler.patch
-Patch2:         glib-no-fsync.patch
+Patch2:		glib-2.30.2-nogccatomics.patch
 BuildRequires:  gettext
 # for sys/inotify.h
 BuildRequires:  glibc-devel
@@ -27,6 +27,8 @@ BuildRequires:  pkgconfig
 BuildRequires:  gamin-devel
 BuildRequires:  pkgconfig(libpcre)
 BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(libffi)
+BuildRequires:  python >= 2.5
 
 %description
 GLib is the low-level core library that forms the basis
@@ -60,11 +62,12 @@ of version 2 of the GLib library.
 %prep
 %setup -q -n glib-%{version}
 %patch1 -p1
-#patch2 -p1
-
+%ifarch armv6l
+%patch2 -p1
+%endif
 
 %build
-%configure --disable-gtk-doc --enable-static --with-runtime-libdir=../../%{_lib} --with-pcre=system
+%reconfigure --disable-gtk-doc --enable-static --with-runtime-libdir=../../%{_lib} --with-pcre=system
 
 #
 # First, build glib enabled for generating the Profile Guided Optimization
@@ -97,6 +100,7 @@ install -p -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/profile.d
 
 rm -f %{buildroot}%{_libdir}/*.la
 rm -f %{buildroot}%{_libdir}/gio/modules/*.{a,la}
+rm -f %{buildroot}%{_libdir}/gdbus-2.0/codegen/*.{pyc,pyo}
 
 # MeeGo does not provide bash completion
 rm -rf %{buildroot}%{_sysconfdir}/bash_completion.d
@@ -148,6 +152,9 @@ rm -rf %{buildroot}
 %{_bindir}/glib-mkenums
 %{_bindir}/gobject-query
 %{_bindir}/gtester
+%{_bindir}/gdbus-codegen
+%dir %{_libdir}/gdbus-2.0/codegen
+%{_libdir}/gdbus-2.0/codegen/*
 %attr (0755, root, root) %{_bindir}/gtester-report
 
 %files static

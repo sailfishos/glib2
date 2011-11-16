@@ -1,0 +1,22 @@
+--- glib-2.30.2/configure.ac	2011-11-11 23:11:22.000000000 +0100
++++ glib-2.30.2-nogccatomics/configure.ac	2011-12-10 10:20:23.570479661 +0100
+@@ -2640,19 +2640,7 @@
+     esac
+ 
+ glib_cv_gcc_has_builtin_atomic_operations=no
+-if test x"$GCC" = xyes; then
+-  AC_MSG_CHECKING([whether GCC supports built-in atomic intrinsics])
+-  AC_TRY_LINK([],
+-	      [int i;
+-	       __sync_synchronize ();
+-	       __sync_bool_compare_and_swap (&i, 0, 1);
+-	       __sync_fetch_and_add (&i, 1);
+-	      ],
+-	      [glib_cv_gcc_has_builtin_atomic_operations=yes],
+-	      [glib_cv_gcc_has_builtin_atomic_operations=no])
+ 
+-  AC_MSG_RESULT($glib_cv_gcc_has_builtin_atomic_operations)
+-fi
+ AM_CONDITIONAL(HAVE_GCC_BUILTINS_FOR_ATOMIC_OPERATIONS,
+ 	       [test $glib_cv_gcc_has_builtin_atomic_operations = yes])
+ 

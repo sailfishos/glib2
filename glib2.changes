@@ -1,3 +1,11 @@
+* Sat Dec 10 2011 Carsten Munk <carsten@maemo.org> - 2.30.2
+- Add glib-2.30.2-nogccatomics.patch for armv6l
+
+* Wed Nov 16 2011 Marko Saukko <marko.saukko@cybercom.com> - 2.30.2
+- Updated to version 2.30.2
+- Added libffi and python build deps.
+- Dropped glib-no-fsync.patch
+
 * Sat Jun 11 2011 Anas Nashif <anas.nashif@intel.com> - 2.28.8
 - Cleanup spec
 
