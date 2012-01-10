@@ -18,13 +18,12 @@ Source3:        glib2.csh
 Source101:      %{name}-rpmlintrc
 
 Patch1:         glib-2.24.0-syslog-message-handler.patch
-Patch2:		glib-2.30.2-nogccatomics.patch
+Patch2:         glib-2.30.2-nogccatomics.patch
 BuildRequires:  gettext
 # for sys/inotify.h
 BuildRequires:  glibc-devel
 BuildRequires:  libattr-devel
 BuildRequires:  pkgconfig
-BuildRequires:  gamin-devel
 BuildRequires:  pkgconfig(libpcre)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libffi)
@@ -131,7 +130,6 @@ rm -rf %{buildroot}
 %{_sysconfdir}/profile.d/*
 %dir %{_libdir}/gio
 %dir %{_libdir}/gio/modules
-%{_libdir}/gio/modules/libgiofam.so
 %{_bindir}/gio-querymodules
 %{_bindir}/glib-compile-schemas
 %{_bindir}/gsettings
