@@ -1,0 +1,56 @@
+Name: glib2
+Summary: A library of handy utility functions
+Version: 2.32.4
+Release: 1
+Group: System/Libraries
+License: LGPLv2+
+URL: http://www.gtk.org
+Sources:
+    - http://download.gnome.org/sources/glib/2.32/glib-%{version}.tar.xz
+    - http://download.gnome.org/sources/glib/2.32/glib-%{version}.sha256sum
+    - glib2.sh
+    - glib2.csh
+    - "%{name}-rpmlintrc"
+Patches:
+    - glib-2.24.0-syslog-message-handler.patch
+Description: |
+    GLib is the low-level core library that forms the basis
+    for projects such as GTK+ and GNOME. It provides data structure
+    handling for C, portability wrappers, and interfaces for such runtime
+    functionality as an event loop, threads, dynamic loading, and an
+    object system.
+    
+    This package provides version 2 of GLib.
+SetupOptions: -q -n glib-%{version}
+PkgBR:
+    - gettext
+    - glibc-devel
+    - libattr-devel
+    - python >= 2.5
+PkgConfigBR:
+    - libpcre
+    - zlib
+    - libffi
+Configure: reconfigure
+ConfigOptions:
+    - --disable-gtk-doc
+    - --enable-static
+    - --with-pcre=system
+Builder: make
+SubPackages:
+    - Name: static
+      Summary: A library of handy utility functions
+      Group: Development/Libraries
+      Description: |
+          The glib2-static package includes static libraries
+          of version 2 of the GLib library.
+      Requires:
+          - "%{name}-devel = %{version}"
+
+    - Name: devel
+      Summary: A library of handy utility functions
+      Group: Development/Libraries
+      Description: |
+          The glib2-devel package includes the header files for
+          version 2 of the GLib library.
+          

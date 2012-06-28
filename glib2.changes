@@ -1,3 +1,8 @@
+* Mon Jul 30 2012 Marko Saukko <marko.saukko@jollamobile.com> - 2.32.4
+- Update to version 2.32.4
+- Added .yaml for spectacle.
+- Dropped glib-2.30.2-nogccatomics.patch
+
 * Mon Jan 09 2012 Marko Saukko <marko.saukko@cybercom.com> - 2.30.2
 - Fixes MER#28: Drop gamin dependency.
 
