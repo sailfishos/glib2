@@ -1,13 +1,13 @@
 Name: glib2
 Summary: A library of handy utility functions
-Version: 2.32.4
+Version: 2.36.4
 Release: 1
 Group: System/Libraries
 License: LGPLv2+
 URL: http://www.gtk.org
 Sources:
-    - http://download.gnome.org/sources/glib/2.32/glib-%{version}.tar.xz
-    - http://download.gnome.org/sources/glib/2.32/glib-%{version}.sha256sum
+    - http://download.gnome.org/sources/glib/2.36/glib-%{version}.tar.xz
+    - http://download.gnome.org/sources/glib/2.36/glib-%{version}.sha256sum
     - glib2.sh
     - glib2.csh
     - "%{name}-rpmlintrc"
