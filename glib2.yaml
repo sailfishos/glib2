@@ -36,6 +36,7 @@ ConfigOptions:
     - --disable-gtk-doc
     - --enable-static
     - --with-pcre=system
+    - "%{!?qa_stage_devel:--enable-debug=no}"
 Builder: make
 SubPackages:
     - Name: static
