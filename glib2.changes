@@ -1,9 +1,9 @@
+* Web Feb 05 2014 Davide Bettio <davide.bettio@ispirata.com> 2.38.2
+- Updated to version 2.38.2
+
 * Mon Aug 26 2013 Davide Bettio <davide.bettio@ispirata.com> 2.36.4
 - Updated old syslog-message-handler patch to build with a recent glib2.
 - Updated spec to install to the correct path gdbus codegen code.
-I would like some careful review and testing of my changes.
-Please make sure that it still works for you syslog-message-handler code path.
-Check if codegen stuff is installed correctly and if something needs to be changed.
 
 * Mon Jul 30 2012 Marko Saukko <marko.saukko@jollamobile.com> - 2.32.4
 - Update to version 2.32.4

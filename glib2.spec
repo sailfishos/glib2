@@ -10,13 +10,13 @@ Name:       glib2
 %define keepstatic 1
 
 Summary:    A library of handy utility functions
-Version:    2.36.4
+Version:    2.38.2
 Release:    1
 Group:      System/Libraries
 License:    LGPLv2+
 URL:        http://www.gtk.org
-Source0:    http://download.gnome.org/sources/glib/2.36/glib-%{version}.tar.xz
-Source1:    http://download.gnome.org/sources/glib/2.36/glib-%{version}.sha256sum
+Source0:    http://download.gnome.org/sources/glib/2.38/glib-%{version}.tar.xz
+Source1:    http://download.gnome.org/sources/glib/2.38/glib-%{version}.sha256sum
 Source2:    glib2.sh
 Source3:    glib2.csh
 Source4:    %{name}-rpmlintrc
