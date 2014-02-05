@@ -21,7 +21,8 @@ Source2:    glib2.sh
 Source3:    glib2.csh
 Source4:    %{name}-rpmlintrc
 Source100:  glib2.yaml
-Patch0:     glib-2.36.3-syslog-message-handler.patch
+Patch0:     0001-GDBusObjectManagerClient-keep-the-manager-alive-whil.patch
+Patch1:     glib-2.36.3-syslog-message-handler.patch
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(libpcre)
@@ -67,8 +68,10 @@ version 2 of the GLib library.
 %prep
 %setup -q -n glib-%{version}
 
-# glib-2.36.3-syslog-message-handler.patch
+# 0001-GDBusObjectManagerClient-keep-the-manager-alive-whil.patch
 %patch0 -p1
+# glib-2.36.3-syslog-message-handler.patch
+%patch1 -p1
 # >> setup
 # << setup
 

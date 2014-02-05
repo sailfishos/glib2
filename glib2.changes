@@ -1,5 +1,6 @@
 * Web Feb 05 2014 Davide Bettio <davide.bettio@ispirata.com> 2.38.2
 - Updated to version 2.38.2
+- 0001-GDBusObjectManagerClient-keep-the-manager-alive-whil.patch
 
 * Mon Aug 26 2013 Davide Bettio <davide.bettio@ispirata.com> 2.36.4
 - Updated old syslog-message-handler patch to build with a recent glib2.

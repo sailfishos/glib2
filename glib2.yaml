@@ -12,6 +12,7 @@ Sources:
     - glib2.csh
     - "%{name}-rpmlintrc"
 Patches:
+    - 0001-GDBusObjectManagerClient-keep-the-manager-alive-whil.patch
     - glib-2.36.3-syslog-message-handler.patch
 Description: |
     GLib is the low-level core library that forms the basis
