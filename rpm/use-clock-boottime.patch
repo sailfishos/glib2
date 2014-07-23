@@ -1,0 +1,98 @@
+From 33b8994fcf11a0fa26326f5408e4a0e585257b66 Mon Sep 17 00:00:00 2001
+From: Islam Amer <islam.amer@jollamobile.com>
+Date: Mon, 28 Jul 2014 20:30:06 +0300
+Subject: [PATCH] use clock boottime
+
+---
+ glib/glib-init.c     | 11 +++++++++++
+ glib/glib-init.h     |  1 +
+ glib/gmain.c         |  4 ++--
+ glib/gthread-posix.c |  3 ++-
+ 4 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/glib/glib-init.c b/glib/glib-init.c
+index df812c7..559a275 100644
+--- a/glib/glib-init.c
++++ b/glib/glib-init.c
+@@ -57,6 +57,8 @@ GLogLevelFlags g_log_msg_prefix = G_LOG_LEVEL_ERROR | G_LOG_LEVEL_WARNING |
+                                   G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_DEBUG;
+ GLogLevelFlags g_log_always_fatal = G_LOG_FATAL_MASK;
+ 
++clockid_t g_clock = CLOCK_MONOTONIC;
++
+ static gboolean
+ debug_key_matches (const gchar *key,
+                    const gchar *token,
+@@ -226,10 +228,19 @@ g_debug_init (void)
+ }
+ 
+ static void
++g_clock_init (void)
++{
++  char *clockspec = getenv("G_CLOCK");
++  if (clockspec && strcasecmp(clockspec, "BOOTTIME") == 0)
++    g_clock = CLOCK_BOOTTIME;
++}
++
++static void
+ glib_init (void)
+ {
+   g_messages_prefixed_init ();
+   g_debug_init ();
++  g_clock_init ();
+ }
+ 
+ #if defined (G_OS_WIN32)
+diff --git a/glib/glib-init.h b/glib/glib-init.h
+index de6be78..90cbe2e 100644
+--- a/glib/glib-init.h
++++ b/glib/glib-init.h
+@@ -24,6 +24,7 @@
+ 
+ extern GLogLevelFlags g_log_always_fatal;
+ extern GLogLevelFlags g_log_msg_prefix;
++GLIB_VAR clockid_t g_clock;
+ 
+ #ifdef G_OS_WIN32
+ #include <windows.h>
+diff --git a/glib/gmain.c b/glib/gmain.c
+index 45ed402..bc7f207 100644
+--- a/glib/gmain.c
++++ b/glib/gmain.c
+@@ -2696,10 +2696,10 @@ g_get_monotonic_time (void)
+   struct timespec ts;
+   gint result;
+ 
+-  result = clock_gettime (CLOCK_MONOTONIC, &ts);
++  result = clock_gettime (g_clock, &ts);
+ 
+   if G_UNLIKELY (result != 0)
+-    g_error ("GLib requires working CLOCK_MONOTONIC");
++    g_error ("GLib requires working CLOCK_MONOTONIC or CLOCK_BOOTTIME");
+ 
+   return (((gint64) ts.tv_sec) * 1000000) + (ts.tv_nsec / 1000);
+ }
+diff --git a/glib/gthread-posix.c b/glib/gthread-posix.c
+index c98c2d8..366fad9 100644
+--- a/glib/gthread-posix.c
++++ b/glib/gthread-posix.c
+@@ -45,6 +45,7 @@
+ #include "gslice.h"
+ #include "gmessages.h"
+ #include "gstrfuncs.h"
++#include "glib-init.h"
+ #include "gmain.h"
+ 
+ #include <stdlib.h>
+@@ -642,7 +643,7 @@ g_cond_impl_new (void)
+ 
+ #ifdef HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE_NP
+ #elif defined (HAVE_PTHREAD_CONDATTR_SETCLOCK) && defined (CLOCK_MONOTONIC)
+-  if G_UNLIKELY ((status = pthread_condattr_setclock (&attr, CLOCK_MONOTONIC)) != 0)
++  if G_UNLIKELY ((status = pthread_condattr_setclock (&attr, g_clock)) != 0)
+     g_thread_abort (status, "pthread_condattr_setclock");
+ #else
+ #error Cannot support GCond on your platform.
+-- 
+1.9.3
+
