@@ -3,7 +3,7 @@ Name:       glib2
 %define keepstatic 1
 
 Summary:    A library of handy utility functions
-Version:    2.38.2
+Version:    2.40.0
 Release:    1
 Group:      System/Libraries
 License:    LGPLv2+
@@ -12,7 +12,6 @@ Source0:    %{name}-%{version}.tar.xz
 Source2:    glib2.sh
 Source3:    glib2.csh
 Source4:    %{name}-rpmlintrc
-Patch0:     0001-GDBusObjectManagerClient-keep-the-manager-alive-whil.patch
 Patch1:     glib-2.36.3-syslog-message-handler.patch
 Patch2:     0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
 Patch3:     use-mtab-instead-of-fstab.patch
@@ -61,8 +60,6 @@ version 2 of the GLib library.
 %prep
 %setup -q -n %{name}-%{version}/upstream
 
-# 0001-GDBusObjectManagerClient-keep-the-manager-alive-whil.patch
-%patch0 -p1
 # glib-2.36.3-syslog-message-handler.patch
 %patch1 -p1
 # 0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
@@ -177,6 +174,7 @@ mv glib20.lang glib2.lang
 %{_bindir}/gobject-query
 %{_bindir}/gtester
 %{_bindir}/gdbus-codegen
+%{_bindir}/gapplication
 %dir %{_datadir}/glib-2.0/codegen
 %{_datadir}/glib-2.0/codegen/*
 %attr (0755, root, root) %{_bindir}/gtester-report
