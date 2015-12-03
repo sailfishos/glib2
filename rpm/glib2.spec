@@ -17,6 +17,7 @@ Patch1:     glib-2.36.3-syslog-message-handler.patch
 Patch2:     0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
 Patch3:     use-mtab-instead-of-fstab.patch
 Patch4:     0001-networkaddress-fix-parsing-of-uri-with-after-authori.patch
+Patch5:     gdbus-no-reply-expected.patch
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(libpcre)
@@ -72,6 +73,8 @@ version 2 of the GLib library.
 %patch3 -p1
 # 0001-networkaddress-fix-parsing-of-uri-with-after-authori.patch
 %patch4 -p1
+# gdbus-no-reply-expected.patch
+%patch5 -p1
 
 %build
 # >> build pre
