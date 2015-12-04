@@ -1,0 +1,14 @@
+diff --git a/gio/gdbusmethodinvocation.c b/gio/gdbusmethodinvocation.c
+index c6cab91..26c04ee 100644
+--- a/gio/gdbusmethodinvocation.c
++++ b/gio/gdbusmethodinvocation.c
+@@ -479,6 +479,9 @@ g_dbus_method_invocation_return_value_internal (GDBusMethodInvocation *invocatio
+         g_assert_not_reached ();
+     }
+ 
++  if (g_dbus_message_get_flags (invocation->message) & G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED)
++    goto out;
++
+   if (G_UNLIKELY (_g_dbus_debug_return ()))
+     {
+       _g_dbus_debug_print_lock ();
