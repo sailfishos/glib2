@@ -1,8 +1,18 @@
 diff --git a/gio/gdbusmethodinvocation.c b/gio/gdbusmethodinvocation.c
-index c6cab91..26c04ee 100644
+index c6cab91..35ab771 100644
 --- a/gio/gdbusmethodinvocation.c
 +++ b/gio/gdbusmethodinvocation.c
-@@ -479,6 +479,9 @@ g_dbus_method_invocation_return_value_internal (GDBusMethodInvocation *invocatio
+@@ -398,6 +398,9 @@ g_dbus_method_invocation_return_value_internal (GDBusMethodInvocation *invocatio
+   if (parameters == NULL)
+     parameters = g_variant_new_tuple (NULL, 0);
+ 
++  /* Make sure that we don't lose the reference, floating or not */
++  g_variant_ref_sink(parameters);
++
+   /* if we have introspection data, check that the signature of @parameters is correct */
+   if (invocation->method_info != NULL)
+     {
+@@ -479,6 +482,9 @@ g_dbus_method_invocation_return_value_internal (GDBusMethodInvocation *invocatio
          g_assert_not_reached ();
      }
  
@@ -12,3 +22,11 @@ index c6cab91..26c04ee 100644
    if (G_UNLIKELY (_g_dbus_debug_return ()))
      {
        _g_dbus_debug_print_lock ();
+@@ -513,6 +519,7 @@ g_dbus_method_invocation_return_value_internal (GDBusMethodInvocation *invocatio
+   g_object_unref (reply);
+ 
+  out:
++  g_variant_unref(parameters);
+   g_object_unref (invocation);
+ }
+ 
