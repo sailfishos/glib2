@@ -1,6 +1,8 @@
---- glib-2.32.4/gio/gunixmounts.c.orig	2013-12-05 20:04:49.919990399 +0000
-+++ glib-2.32.4/gio/gunixmounts.c	2013-12-05 20:05:26.217706386 +0000
-@@ -754,7 +754,7 @@
+diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
+index 2e2ff5e..ed036d9 100644
+--- a/gio/gunixmounts.c
++++ b/gio/gunixmounts.c
+@@ -755,7 +755,7 @@ _g_get_unix_mount_points (void)
    GUnixMountPoint *mount_entry;
    GList *return_list;
    
