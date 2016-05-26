@@ -1,11 +1,8 @@
-@@ -, +, @@ 
- volume
----
- gio/gunixvolume.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
---- a/gio/gunixvolume.c	
-+++ a/gio/gunixvolume.c	
-@@ -112,7 +112,8 @@ _g_unix_volume_new (GVolumeMonitor  *volume_monitor,
+diff --git a/gio/gunixvolume.c b/gio/gunixvolume.c
+index 981f703..48ea9fd 100644
+--- a/gio/gunixvolume.c
++++ b/gio/gunixvolume.c
+@@ -110,7 +110,8 @@ _g_unix_volume_new (GVolumeMonitor  *volume_monitor,
    GUnixVolume *volume;
    
    if (!(g_unix_mount_point_is_user_mountable (mountpoint) ||
@@ -15,4 +12,3 @@
        g_unix_mount_point_is_loopback (mountpoint))
      return NULL;
    
--- 

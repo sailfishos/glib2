@@ -15,17 +15,19 @@ Subject: [PATCH] Add a custom log handling for MeeGo
     -  ...
     -  glib.syslog=6 logs debug messages
   It defaults to logging WARNING, CRITICAL and ERROR messages
---- a/glib/gmessages.c	2013-06-10 00:03:18.000000000 +0200
-+++ b/glib/gmessages.c	2013-07-15 17:12:04.190826951 +0200
-@@ -58,6 +58,7 @@
+diff --git a/glib/gmessages.c b/glib/gmessages.c
+index 6720a26..d378bf1 100644
+--- a/glib/gmessages.c
++++ b/glib/gmessages.c
+@@ -54,6 +54,7 @@
  #include <signal.h>
  #include <locale.h>
  #include <errno.h>
 +#include <syslog.h>
  
- #include "gmessages.h"
- 
-@@ -70,6 +71,7 @@
+ #include "glib-init.h"
+ #include "gbacktrace.h"
+@@ -64,6 +65,7 @@
  #include "gprintfint.h"
  #include "gtestutils.h"
  #include "gthread.h"
@@ -33,7 +35,7 @@ Subject: [PATCH] Add a custom log handling for MeeGo
  #include "gstrfuncs.h"
  #include "gstring.h"
  #include "gpattern.h"
-@@ -1011,6 +1013,142 @@
+@@ -1120,6 +1122,142 @@ g_log (const gchar   *log_domain,
    va_end (args);
  }
  
@@ -173,17 +175,17 @@ Subject: [PATCH] Add a custom log handling for MeeGo
 +  return interactive;
 +}
 +
- void
- g_return_if_fail_warning (const char *log_domain,
- 			  const char *pretty_function,
-@@ -1375,7 +1513,12 @@
+ /**
+  * g_return_if_fail_warning: (skip)
+  * @log_domain: (nullable):
+@@ -1504,7 +1642,12 @@ g_log_default_handler (const gchar   *log_domain,
  
    string = g_string_free (gstring, FALSE);
  
--  write_string (fd, string);
+-  write_string (stream, string);
 +  /* only output a string to stdout/stderr if we are in an interactive shell */
 +  if (is_interactive ())
-+    write_string (fd, string);
++    write_string (stream, string);
 +
 +  /* */
 +  g_log_syslog_handler (log_domain, log_level, message, unused_data);
