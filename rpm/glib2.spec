@@ -15,6 +15,7 @@ Source4:    %{name}-rpmlintrc
 Patch1:     glib-syslog-message-handler.patch
 Patch2:     0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
 Patch3:     use-mtab-instead-of-fstab.patch
+Patch4:     glib-replace-some-criticals-with-warnings.patch
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(libpcre)
@@ -66,6 +67,8 @@ version 2 of the GLib library.
 %patch2 -p1
 # use-mtab-instead-of-fstab.patch
 %patch3 -p1
+# glib-replace-some-criticals-with-warnings.patch
+%patch4 -p1
 
 %build
 # >> build pre
