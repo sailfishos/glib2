@@ -3,7 +3,7 @@ Name:       glib2
 %define keepstatic 1
 
 Summary:    A library of handy utility functions
-Version:    2.48.0
+Version:    2.56.1
 Release:    1
 Group:      System/Libraries
 License:    LGPLv2+
@@ -12,10 +12,8 @@ Source0:    %{name}-%{version}.tar.xz
 Source2:    glib2.sh
 Source3:    glib2.csh
 Source4:    %{name}-rpmlintrc
-Patch1:     glib-syslog-message-handler.patch
-Patch2:     0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
-Patch3:     use-mtab-instead-of-fstab.patch
-Patch4:     glib-replace-some-criticals-with-warnings.patch
+Patch1:     0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
+Patch2:     glib-replace-some-criticals-with-warnings.patch
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(libpcre)
@@ -61,29 +59,23 @@ version 2 of the GLib library.
 %prep
 %setup -q -n %{name}-%{version}/upstream
 
-# glib-syslog-message-handler.patch
-%patch1 -p1
 # 0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
-%patch2 -p1
-# use-mtab-instead-of-fstab.patch
-%patch3 -p1
+%patch1 -p1
 # glib-replace-some-criticals-with-warnings.patch
-%patch4 -p1
+%patch2 -p1
 
 %build
-# >> build pre
 #
 # First, build glib enabled for generating the Profile Guided Optimization
 # metadata
 #
-# << build pre
 %autogen  \
     --enable-static \
-    --with-pcre=system
+    --with-pcre=system \
+    --disable-libmount
 
 make %{?_smp_mflags}
 
-# >> build post
 cd tests/gobject
 
 #
@@ -98,15 +90,11 @@ rm `find -name "*.o"`
 # And now compile again, using the generated profile data
 #
 make %{?_smp_mflags} CFLAGS="$CFLAGS -fprofile-use"
-# << build post
 
 %install
 rm -rf %{buildroot}
-# >> install pre
-# << install pre
 %make_install
 
-# >> install post
 ## glib2.sh and glib2.csh
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
@@ -126,7 +114,6 @@ mv glib20.lang glib2.lang
 %docs_package
 
 %lang_package
-# << install post
 
 %post -p /sbin/ldconfig
 
@@ -134,7 +121,6 @@ mv glib20.lang glib2.lang
 
 %files
 %defattr(-,root,root,-)
-# >> files
 %doc COPYING
 %{_libdir}/libglib-2.0.so.*
 %{_libdir}/libgthread-2.0.so.*
@@ -151,19 +137,16 @@ mv glib20.lang glib2.lang
 %{_bindir}/glib-compile-resources
 %{_bindir}/gresource
 %{_bindir}/gapplication
+%{_bindir}/gio
 %{_datarootdir}/gettext/its
-# << files
 
 %files static
 %defattr(-,root,root,-)
-# >> files static
 %defattr(-, root, root, -)
 %{_libdir}/lib*.a
-# << files static
 
 %files devel
 %defattr(-,root,root,-)
-# >> files devel
 %defattr(-, root, root, -)
 %{_libdir}/lib*.so
 %{_libdir}/glib-2.0
@@ -178,6 +161,4 @@ mv glib20.lang glib2.lang
 %{_bindir}/gobject-query
 %{_bindir}/gtester
 %{_bindir}/gdbus-codegen
-%{_datadir}/glib-2.0/codegen
 %attr (0755, root, root) %{_bindir}/gtester-report
-# << files devel
