@@ -113,8 +113,6 @@ rm -rf %{buildroot}%{_datadir}/bash-completion
 %find_lang glib20
 mv glib20.lang glib2.lang
 
-%docs_package
-
 %lang_package
 
 %post -p /sbin/ldconfig
@@ -123,7 +121,7 @@ mv glib20.lang glib2.lang
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING
+%license COPYING
 %{_libdir}/libglib-2.0.so.*
 %{_libdir}/libgthread-2.0.so.*
 %{_libdir}/libgmodule-2.0.so.*
@@ -144,12 +142,10 @@ mv glib20.lang glib2.lang
 
 %files static
 %defattr(-,root,root,-)
-%defattr(-, root, root, -)
 %{_libdir}/lib*.a
 
 %files devel
 %defattr(-,root,root,-)
-%defattr(-, root, root, -)
 %{_libdir}/lib*.so
 %{_libdir}/glib-2.0
 %{_includedir}/*
