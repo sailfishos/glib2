@@ -12,9 +12,8 @@ Source0:    %{name}-%{version}.tar.xz
 Source2:    glib2.sh
 Source3:    glib2.csh
 Source4:    %{name}-rpmlintrc
-Patch1:     0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
+Patch1:     0001-glib2-detect-removable-storage-properly.-JB-48442.patch
 Patch2:     glib-replace-some-criticals-with-warnings.patch
-Patch3:     use-mtab-instead-of-fstab.patch
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(libpcre)
@@ -60,11 +59,10 @@ version 2 of the GLib library.
 %prep
 %setup -q -n %{name}-%{version}/upstream
 
-# 0001-Add-dev-mmcblk-to-the-list-of-devices-to-be-detected.patch
+# 0001-glib2-paths-in-run-media-frajo-are-generally-user-mo.patch
 %patch1 -p1
 # glib-replace-some-criticals-with-warnings.patch
 %patch2 -p1
-%patch3 -p1
 
 %build
 #
