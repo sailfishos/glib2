@@ -1,7 +1,7 @@
-From ace4b91d16db30d658756e3367674f206d21e10d Mon Sep 17 00:00:00 2001
+From 7686cc0a857ffd11c06698fce56413439a8bf701 Mon Sep 17 00:00:00 2001
 From: Frajo Haider <f_haider@gmx.at>
 Date: Wed, 15 Jan 2020 15:06:05 +0000
-Subject: [PATCH 1/1] [glib2] detect removable storage properly. JB#48442
+Subject: [PATCH] detect removable storage properly. JB#48442
 
 This is needed for Tracker to detect removable storage properly. Upstream
 by default already moved to libmount, but that seems to have problems with
@@ -16,10 +16,10 @@ properly.
  1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
-index 0035d57..9afe957 100644
+index cbf2ee9..2fe361d 100644
 --- a/gio/gunixmounts.c
 +++ b/gio/gunixmounts.c
-@@ -1048,8 +1048,11 @@ _g_get_unix_mount_points (void)
+@@ -1087,8 +1087,11 @@ _g_get_unix_mount_points (void)
    char *read_file;
    GUnixMountPoint *mount_point;
    GList *return_list;
@@ -32,7 +32,7 @@ index 0035d57..9afe957 100644
    
    file = setmntent (read_file, "r");
    if (file == NULL)
-@@ -1105,6 +1108,15 @@ _g_get_unix_mount_points (void)
+@@ -1144,6 +1147,15 @@ _g_get_unix_mount_points (void)
  	  )
  	is_user_mountable = TRUE;
  

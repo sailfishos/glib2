@@ -1,8 +1,8 @@
 diff --git a/glib/gmain.c b/glib/gmain.c
-index 227168a0f..850638735 100644
+index af979c8..e7db171 100644
 --- a/glib/gmain.c
 +++ b/glib/gmain.c
-@@ -2349,7 +2349,7 @@ g_source_remove (guint tag)
+@@ -2352,7 +2352,7 @@ g_source_remove (guint tag)
    if (source)
      g_source_destroy (source);
    else

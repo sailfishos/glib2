@@ -3,9 +3,8 @@ Name:       glib2
 %define keepstatic 1
 
 Summary:    A library of handy utility functions
-Version:    2.56.1
+Version:    2.62.4
 Release:    1
-Group:      System/Libraries
 License:    LGPLv2+
 URL:        http://www.gtk.org
 Source0:    %{name}-%{version}.tar.xz
@@ -16,13 +15,21 @@ Patch1:     0001-glib2-detect-removable-storage-properly.-JB-48442.patch
 Patch2:     glib-replace-some-criticals-with-warnings.patch
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-BuildRequires:  pkgconfig(libpcre)
-BuildRequires:  pkgconfig(zlib)
-BuildRequires:  pkgconfig(libffi)
-BuildRequires:  gettext
-BuildRequires:  glibc-devel
-BuildRequires:  libattr-devel
-BuildRequires:  python >= 2.5
+BuildRequires: chrpath
+BuildRequires: gettext
+BuildRequires: perl
+# for sys/inotify.h
+BuildRequires: glibc-devel
+BuildRequires: libattr-devel
+BuildRequires: libselinux-devel
+BuildRequires: meson
+# for sys/sdt.h
+BuildRequires: pkgconfig(libelf)
+BuildRequires: pkgconfig(libffi)
+BuildRequires: pkgconfig(libpcre)
+BuildRequires: pkgconfig(mount)
+BuildRequires: pkgconfig(zlib)
+BuildRequires: python3-devel
 
 %description
 GLib is the low-level core library that forms the basis
@@ -36,7 +43,6 @@ This package provides version 2 of GLib.
 
 %package static
 Summary:    A library of handy utility functions
-Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
 Requires:   %{name}-devel = %{version}
 
@@ -47,9 +53,8 @@ of version 2 of the GLib library.
 
 %package devel
 Summary:    A library of handy utility functions
-Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
-Requires:   python
+Requires:   python3-base
 
 %description devel
 The glib2-devel package includes the header files for
@@ -57,52 +62,42 @@ version 2 of the GLib library.
 
 
 %prep
-%setup -q -n %{name}-%{version}/upstream
-
-# 0001-glib2-paths-in-run-media-frajo-are-generally-user-mo.patch
-%patch1 -p1
-# glib-replace-some-criticals-with-warnings.patch
-%patch2 -p1
+%autosetup -p1 -n %{name}-%{version}/upstream
 
 %build
-#
-# First, build glib enabled for generating the Profile Guided Optimization
-# metadata
-#
-%autogen  \
-    --enable-static \
-    --with-pcre=system \
-    --disable-libmount
+# Bug 1324770: Also explicitly remove PCRE sources since we use --with-pcre=system
+rm -f glib/pcre/*.[ch]
+%meson \
+    --default-library=both \
+    -Dlibmount=false
 
-make %{?_smp_mflags}
-
-cd tests/gobject
-
-#
-# Now run the glib performance tests to create the profile data
-#
-make performance CFLAGS="$CFLAGS -pg -fprofile-generate"
-cd ../..
-tests/gobject/performance type-check
-rm `find -name "*.lo"`
-rm `find -name "*.o"`
-#
-# And now compile again, using the generated profile data
-#
-make %{?_smp_mflags} CFLAGS="$CFLAGS -fprofile-use"
+%meson_build
 
 %install
-rm -rf %{buildroot}
-%make_install
+%meson_install
+# Since this is a generated .py file, set it to a known timestamp for
+# better reproducibility.
+# Also copy the timestamp for other .py files, because meson doesn't
+# do this, see https://github.com/mesonbuild/meson/issues/5027.
+touch -r gio/gdbus-2.0/codegen/config.py.in %{buildroot}%{_datadir}/glib-2.0/codegen/*.py
+chrpath --delete %{buildroot}%{_libdir}/*.so
+
+# Perform byte compilation manually to avoid issues with
+# irreproducibility of the default invalidation mode, see
+# https://www.python.org/dev/peps/pep-0552/ and
+# https://bugzilla.redhat.com/show_bug.cgi?id=1686078
+export PYTHONHASHSEED=0
+%global __python %{__python3} %{buildroot}%{_datadir}
+
+mv %{buildroot}%{_bindir}/gio-querymodules %{buildroot}%{_bindir}/gio-querymodules-%{__isa_bits}
+
+mkdir -p %{buildroot}%{_libdir}/gio/modules
+touch %{buildroot}%{_libdir}/gio/modules/giomodule.cache
 
 ## glib2.sh and glib2.csh
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/profile.d
-
-rm -f %{buildroot}%{_libdir}/*.la
-rm -f %{buildroot}%{_libdir}/gio/modules/*.{a,la}
-rm -f %{buildroot}%{_datadir}/glib-2.0/codegen/*.{pyc,pyo}
 
 # MeeGo does not provide bash completion
 rm -rf %{buildroot}%{_sysconfdir}/bash_completion.d
@@ -110,6 +105,18 @@ rm -rf %{buildroot}%{_datadir}/bash-completion
 
 %find_lang glib20
 mv glib20.lang glib2.lang
+
+%transfiletriggerin -- %{_libdir}/gio/modules
+gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules &> /dev/null || :
+
+%transfiletriggerpostun -- %{_libdir}/gio/modules
+gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules &> /dev/null || :
+
+%transfiletriggerin -- %{_datadir}/glib-2.0/schemas
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+
+%transfiletriggerpostun -- %{_datadir}/glib-2.0/schemas
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %lang_package
 
@@ -126,9 +133,12 @@ mv glib20.lang glib2.lang
 %{_libdir}/libgobject-2.0.so.*
 %{_libdir}/libgio-2.0.so.*
 %{_sysconfdir}/profile.d/*
+%dir %{_datadir}/glib-2.0
+%dir %{_datadir}/glib-2.0/schemas
 %dir %{_libdir}/gio
 %dir %{_libdir}/gio/modules
-%{_bindir}/gio-querymodules
+%ghost %{_libdir}/gio/modules/giomodule.cache
+%{_bindir}/gio-querymodules*
 %{_bindir}/glib-compile-schemas
 %{_bindir}/gsettings
 %{_bindir}/gdbus
@@ -136,6 +146,7 @@ mv glib20.lang glib2.lang
 %{_bindir}/gresource
 %{_bindir}/gapplication
 %{_bindir}/gio
+%{_bindir}/gio-launch-desktop
 %{_datarootdir}/gettext/its
 
 %files static
@@ -150,7 +161,7 @@ mv glib20.lang glib2.lang
 %{_datadir}/aclocal/*
 %{_libdir}/pkgconfig/*
 %{_datadir}/glib-2.0
-%{_datadir}/gdb/auto-load/usr/lib/*.py*
+%{_datadir}/gdb/
 %{_bindir}/glib-genmarshal
 %{_bindir}/glib-gettextize
 %{_bindir}/glib-mkenums
