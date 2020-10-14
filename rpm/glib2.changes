@@ -2,7 +2,7 @@
 - Updated old syslog-message-handler patch to build with a recent glib2.
 - Updated spec to install to the correct path gdbus codegen code.
 
-* Mon Oct 28 2012 David Greaves <david.greaves@jollamobile.com> - 2.32.4
+* Sun Oct 28 2012 David Greaves <david.greaves@jollamobile.com> - 2.32.4
 - Build with --enable-debug=no unless stage_devel defined
 
 * Mon Jul 30 2012 Marko Saukko <marko.saukko@jollamobile.com> - 2.32.4
