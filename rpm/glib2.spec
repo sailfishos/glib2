@@ -3,7 +3,7 @@ Name:       glib2
 %define keepstatic 1
 
 Summary:    A library of handy utility functions
-Version:    2.62.4
+Version:    2.66.1
 Release:    1
 License:    LGPLv2+
 URL:        http://www.gtk.org
@@ -11,8 +11,8 @@ Source0:    %{name}-%{version}.tar.xz
 Source2:    glib2.sh
 Source3:    glib2.csh
 Source4:    %{name}-rpmlintrc
-Patch1:     0001-glib2-detect-removable-storage-properly.-JB-48442.patch
-Patch2:     glib-replace-some-criticals-with-warnings.patch
+Patch1:     0001-detect-removable-storage-properly.-JB-48442.patch
+Patch2:     0001-glib-Replace-g_critical-in-g_source_remove-with-g_wa.patch
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires: chrpath
@@ -69,7 +69,7 @@ version 2 of the GLib library.
 rm -f glib/pcre/*.[ch]
 %meson \
     --default-library=both \
-    -Dlibmount=false
+    -Dlibmount=disabled
 
 %meson_build
 
@@ -90,6 +90,7 @@ export PYTHONHASHSEED=0
 %global __python %{__python3} %{buildroot}%{_datadir}
 
 mv %{buildroot}%{_bindir}/gio-querymodules %{buildroot}%{_bindir}/gio-querymodules-%{__isa_bits}
+sed -i -e "/^gio_querymodules=/s/gio-querymodules/gio-querymodules-%{__isa_bits}/" %{buildroot}%{_libdir}/pkgconfig/gio-2.0.pc
 
 mkdir -p %{buildroot}%{_libdir}/gio/modules
 touch %{buildroot}%{_libdir}/gio/modules/giomodule.cache
@@ -146,7 +147,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/gresource
 %{_bindir}/gapplication
 %{_bindir}/gio
-%{_bindir}/gio-launch-desktop
 %{_datarootdir}/gettext/its
 
 %files static

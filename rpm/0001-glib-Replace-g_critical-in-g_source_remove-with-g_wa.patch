@@ -1,0 +1,29 @@
+From d75b5f52bbca63dfe20c7c4604b9783d990c6f73 Mon Sep 17 00:00:00 2001
+From: Slava Monich <slava.monich@jolla.com>
+Date: Mon, 30 May 2016 12:25:19 +0300
+Subject: [PATCH] glib: Replace g_critical in g_source_remove with g_warning.
+ Contributes to JB#35380
+
+glib 2.39 and later calls g_critical from g_source_remove() if it's called
+with invalid source id. Even though it's a programming error, in most cases
+it's not fatal.
+---
+ glib/gmain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/glib/gmain.c b/glib/gmain.c
+index cae6e4828..ca21cf272 100644
+--- a/glib/gmain.c
++++ b/glib/gmain.c
+@@ -2496,7 +2496,7 @@ g_source_remove (guint tag)
+   if (source)
+     g_source_destroy (source);
+   else
+-    g_critical ("Source ID %u was not found when attempting to remove it", tag);
++    g_warning ("Source ID %u was not found when attempting to remove it", tag);
+ 
+   return source != NULL;
+ }
+-- 
+2.26.2
+
