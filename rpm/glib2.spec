@@ -1,35 +1,31 @@
 Name:       glib2
-
-%define keepstatic 1
-
 Summary:    A library of handy utility functions
-Version:    2.66.1
+Version:    2.66.2
 Release:    1
 License:    LGPLv2+
 URL:        http://www.gtk.org
-Source0:    %{name}-%{version}.tar.xz
+Source0:    %{name}-%{version}.tar.bz2
+Source1:    %{name}-rpmlintrc
 Source2:    glib2.sh
 Source3:    glib2.csh
-Source4:    %{name}-rpmlintrc
 Patch1:     0001-detect-removable-storage-properly.-JB-48442.patch
 Patch2:     0001-glib-Replace-g_critical-in-g_source_remove-with-g_wa.patch
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
 BuildRequires: chrpath
 BuildRequires: gettext
 BuildRequires: perl
+BuildRequires: meson
+BuildRequires: python3-devel
 # for sys/inotify.h
 BuildRequires: glibc-devel
 BuildRequires: libattr-devel
 BuildRequires: libselinux-devel
-BuildRequires: meson
 # for sys/sdt.h
 BuildRequires: pkgconfig(libelf)
 BuildRequires: pkgconfig(libffi)
 BuildRequires: pkgconfig(libpcre)
-BuildRequires: pkgconfig(mount)
 BuildRequires: pkgconfig(zlib)
-BuildRequires: python3-devel
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description
 GLib is the low-level core library that forms the basis
@@ -100,7 +96,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/profile.d
 
-# MeeGo does not provide bash completion
+# Do not provide bash completion
 rm -rf %{buildroot}%{_sysconfdir}/bash_completion.d
 rm -rf %{buildroot}%{_datadir}/bash-completion
 
@@ -133,25 +129,18 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/libgmodule-2.0.so.*
 %{_libdir}/libgobject-2.0.so.*
 %{_libdir}/libgio-2.0.so.*
-%{_sysconfdir}/profile.d/*
 %dir %{_datadir}/glib-2.0
 %dir %{_datadir}/glib-2.0/schemas
 %dir %{_libdir}/gio
 %dir %{_libdir}/gio/modules
 %ghost %{_libdir}/gio/modules/giomodule.cache
+%{_bindir}/gio
 %{_bindir}/gio-querymodules*
 %{_bindir}/glib-compile-schemas
 %{_bindir}/gsettings
 %{_bindir}/gdbus
-%{_bindir}/glib-compile-resources
-%{_bindir}/gresource
 %{_bindir}/gapplication
-%{_bindir}/gio
-%{_datarootdir}/gettext/its
-
-%files static
-%defattr(-,root,root,-)
-%{_libdir}/lib*.a
+%{_sysconfdir}/profile.d/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -160,12 +149,19 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_includedir}/*
 %{_datadir}/aclocal/*
 %{_libdir}/pkgconfig/*
-%{_datadir}/glib-2.0
+%{_datadir}/glib-2.0/
 %{_datadir}/gdb/
+%{_datadir}/gettext/
 %{_bindir}/glib-genmarshal
 %{_bindir}/glib-gettextize
 %{_bindir}/glib-mkenums
 %{_bindir}/gobject-query
 %{_bindir}/gtester
 %{_bindir}/gdbus-codegen
+%{_bindir}/glib-compile-resources
+%{_bindir}/gresource
 %attr (0755, root, root) %{_bindir}/gtester-report
+
+%files static
+%defattr(-,root,root,-)
+%{_libdir}/lib*.a
