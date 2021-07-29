@@ -24,6 +24,8 @@ BuildRequires: pkgconfig(libelf)
 BuildRequires: pkgconfig(libffi)
 BuildRequires: pkgconfig(libpcre)
 BuildRequires: pkgconfig(zlib)
+# for G_HAVE_ISO_VARARGS (and unused tests)
+BuildRequires: libstdc++-devel
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
