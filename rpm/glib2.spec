@@ -1,6 +1,6 @@
 Name:       glib2
 Summary:    A library of handy utility functions
-Version:    2.66.2
+Version:    2.72.0
 Release:    1
 License:    LGPLv2+
 URL:        http://www.gtk.org
@@ -9,7 +9,7 @@ Source1:    %{name}-rpmlintrc
 Source2:    glib2.sh
 Source3:    glib2.csh
 Patch1:     0001-detect-removable-storage-properly.-JB-48442.patch
-Patch2:     0001-glib-Replace-g_critical-in-g_source_remove-with-g_wa.patch
+Patch2:     0002-glib-Replace-g_critical-in-g_source_remove-with-g_wa.patch
 BuildRequires: chrpath
 BuildRequires: gettext
 BuildRequires: perl

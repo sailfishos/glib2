@@ -1,4 +1,4 @@
-From 238be9a1f97944fd19d00e0112b0e5cd77617c35 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Frajo Haider <f_haider@gmx.at>
 Date: Wed, 15 Jan 2020 15:06:05 +0000
 Subject: [PATCH] detect removable storage properly. JB#48442
@@ -16,10 +16,10 @@ properly.
  1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
-index b0fdfa8c0..08c41881b 100644
+index 9c8ef5d666fdb023091feed7313f6cb7a6c68d30..2d83276578132491555ec68ea06bc05227a6cc9b 100644
 --- a/gio/gunixmounts.c
 +++ b/gio/gunixmounts.c
-@@ -1091,8 +1091,11 @@ _g_get_unix_mount_points (void)
+@@ -1107,8 +1107,11 @@ _g_get_unix_mount_points (void)
    char *read_file;
    GUnixMountPoint *mount_point;
    GList *return_list;
@@ -32,7 +32,7 @@ index b0fdfa8c0..08c41881b 100644
    
    file = setmntent (read_file, "r");
    if (file == NULL)
-@@ -1148,6 +1151,15 @@ _g_get_unix_mount_points (void)
+@@ -1163,6 +1166,15 @@ _g_get_unix_mount_points (void)
  	  )
  	is_user_mountable = TRUE;
  
@@ -48,6 +48,3 @@ index b0fdfa8c0..08c41881b 100644
        mount_point = create_unix_mount_point (device_path,
                                               mntent->mnt_dir,
                                               mntent->mnt_type,
--- 
-2.26.2
-
