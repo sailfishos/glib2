@@ -16,10 +16,10 @@ properly.
  1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
-index 9c8ef5d666fdb023091feed7313f6cb7a6c68d30..2d83276578132491555ec68ea06bc05227a6cc9b 100644
+index 1cfd25d9e7951832f3f7015acc2951b3890b53f5..69cc4a8bbbc3ab6b56e66e078383758ec3c2b184 100644
 --- a/gio/gunixmounts.c
 +++ b/gio/gunixmounts.c
-@@ -1107,8 +1107,11 @@ _g_get_unix_mount_points (void)
+@@ -1120,8 +1120,11 @@ _g_get_unix_mount_points (void)
    char *read_file;
    GUnixMountPoint *mount_point;
    GList *return_list;
@@ -30,9 +30,9 @@ index 9c8ef5d666fdb023091feed7313f6cb7a6c68d30..2d83276578132491555ec68ea06bc052
 -  read_file = get_fstab_file ();
 +  read_file = get_mtab_read_file ();
    
-   file = setmntent (read_file, "r");
+   file = setmntent (read_file, "re");
    if (file == NULL)
-@@ -1163,6 +1166,15 @@ _g_get_unix_mount_points (void)
+@@ -1176,6 +1179,15 @@ _g_get_unix_mount_points (void)
  	  )
  	is_user_mountable = TRUE;
  
