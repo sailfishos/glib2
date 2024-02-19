@@ -1,6 +1,6 @@
 Name:       glib2
 Summary:    A library of handy utility functions
-Version:    2.72.3
+Version:    2.78.4
 Release:    1
 License:    LGPLv2+
 URL:        http://www.gtk.org
@@ -23,7 +23,7 @@ BuildRequires: libselinux-devel
 # for sys/sdt.h
 BuildRequires: pkgconfig(libelf)
 BuildRequires: pkgconfig(libffi)
-BuildRequires: pkgconfig(libpcre)
+BuildRequires: pkgconfig(libpcre2-8)
 BuildRequires: pkgconfig(zlib)
 # for G_HAVE_ISO_VARARGS (and unused tests)
 BuildRequires: libstdc++-devel
@@ -44,6 +44,7 @@ This package provides version 2 of GLib.
 Summary:    A library of handy utility functions
 Requires:   %{name} = %{version}-%{release}
 Requires:   %{name}-devel = %{version}
+Requires:   pcre2-static
 
 %description static
 The glib2-static package includes static libraries
@@ -143,6 +144,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/gsettings
 %{_bindir}/gdbus
 %{_bindir}/gapplication
+%{_libexecdir}/gio-launch-desktop
 %{_sysconfdir}/profile.d/*
 
 %files devel
