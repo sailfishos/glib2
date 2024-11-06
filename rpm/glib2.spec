@@ -126,8 +126,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
-%license COPYING
+%license LICENSES/LGPL-2.1-or-later.txt
 %{_libdir}/libglib-2.0.so.*
 %{_libdir}/libgthread-2.0.so.*
 %{_libdir}/libgmodule-2.0.so.*
@@ -148,7 +147,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/profile.d/*
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/lib*.so
 %{_libdir}/glib-2.0
 %{_includedir}/*
@@ -168,5 +166,4 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %attr (0755, root, root) %{_bindir}/gtester-report
 
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/lib*.a
