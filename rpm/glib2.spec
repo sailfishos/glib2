@@ -1,6 +1,6 @@
 Name:       glib2
 Summary:    A library of handy utility functions
-Version:    2.78.4
+Version:    2.82.4
 Release:    1
 License:    LGPLv2+
 URL:        http://www.gtk.org
@@ -18,6 +18,8 @@ BuildRequires: meson
 BuildRequires: python3-devel
 # for sys/inotify.h
 BuildRequires: glibc-devel
+BuildRequires: pkgconfig(gobject-introspection-1.0)
+BuildRequires: libatomic
 BuildRequires: libattr-devel
 BuildRequires: libselinux-devel
 # for sys/sdt.h
@@ -29,6 +31,9 @@ BuildRequires: pkgconfig(zlib)
 BuildRequires: libstdc++-devel
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
+
+# glib typelib files moved from gobject-introspection to glib2
+#Conflicts: gobject-introspection < 1.79.1
 
 %description
 GLib is the low-level core library that forms the basis
@@ -45,6 +50,7 @@ Summary:    A library of handy utility functions
 Requires:   %{name} = %{version}-%{release}
 Requires:   %{name}-devel = %{version}
 Requires:   pcre2-static
+Requires:   libatomic-static
 
 %description static
 The glib2-static package includes static libraries
@@ -55,6 +61,8 @@ of version 2 of the GLib library.
 Summary:    A library of handy utility functions
 Requires:   %{name} = %{version}-%{release}
 Requires:   python3-base
+# glib gir files moved from gobject-introspection-devel to glib2-devel
+#Conflicts: gobject-introspection-devel < 1.79.1
 
 %description devel
 The glib2-devel package includes the header files for
@@ -69,7 +77,11 @@ version 2 of the GLib library.
 rm -f glib/pcre/*.[ch]
 %meson \
     --default-library=both \
-    -Dlibmount=disabled
+    -Ddtrace=disabled \
+    -Dlibmount=disabled \
+    -Dman-pages=disabled \
+    -Dsysprof=disabled \
+    -Dsystemtap=disabled
 
 %meson_build
 
@@ -132,6 +144,15 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/libgmodule-2.0.so.*
 %{_libdir}/libgobject-2.0.so.*
 %{_libdir}/libgio-2.0.so.*
+%{_libdir}/libgirepository-2.0.so.0*
+%dir %{_libdir}/girepository-1.0
+%{_libdir}/girepository-1.0/GIRepository-3.0.typelib
+%{_libdir}/girepository-1.0/GLib-2.0.typelib
+%{_libdir}/girepository-1.0/GLibUnix-2.0.typelib
+%{_libdir}/girepository-1.0/GModule-2.0.typelib
+%{_libdir}/girepository-1.0/GObject-2.0.typelib
+%{_libdir}/girepository-1.0/Gio-2.0.typelib
+%{_libdir}/girepository-1.0/GioUnix-2.0.typelib
 %dir %{_datadir}/glib-2.0
 %dir %{_datadir}/glib-2.0/schemas
 %dir %{_libdir}/gio
@@ -154,10 +175,21 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/pkgconfig/*
 %{_datadir}/glib-2.0/
 %{_datadir}/gdb/
+%dir %{_datadir}/gir-1.0
+%{_datadir}/gir-1.0/GIRepository-3.0.gir
+%{_datadir}/gir-1.0/GLib-2.0.gir
+%{_datadir}/gir-1.0/GLibUnix-2.0.gir
+%{_datadir}/gir-1.0/GModule-2.0.gir
+%{_datadir}/gir-1.0/GObject-2.0.gir
+%{_datadir}/gir-1.0/Gio-2.0.gir
+%{_datadir}/gir-1.0/GioUnix-2.0.gir
 %{_datadir}/gettext/
 %{_bindir}/glib-genmarshal
 %{_bindir}/glib-gettextize
 %{_bindir}/glib-mkenums
+%{_bindir}/gi-compile-repository
+%{_bindir}/gi-decompile-typelib
+%{_bindir}/gi-inspect-typelib
 %{_bindir}/gobject-query
 %{_bindir}/gtester
 %{_bindir}/gdbus-codegen

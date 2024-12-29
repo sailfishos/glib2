@@ -12,27 +12,24 @@ Additionally to using mtab instead of fstab also check whether the mount
 is in /run/media/$USER, in order to detect user removable storage
 properly.
 ---
- gio/gunixmounts.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ gio/gunixmounts.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
-index 1cfd25d9e7951832f3f7015acc2951b3890b53f5..69cc4a8bbbc3ab6b56e66e078383758ec3c2b184 100644
+index 1ebc9a7a179ffabbfb602f6577e1969df25a1009..8b02ec59cd731cfe77f28c3a54ff83df98f25c79 100644
 --- a/gio/gunixmounts.c
 +++ b/gio/gunixmounts.c
-@@ -1120,8 +1120,11 @@ _g_get_unix_mount_points (void)
-   char *read_file;
+@@ -1291,6 +1291,9 @@ _g_unix_mount_points_get_from_file (const char *table_path,
+   FILE *file;
    GUnixMountPoint *mount_point;
-   GList *return_list;
+   GPtrArray *return_array = NULL;
 +  const char *mount_path;
 +  const gchar *user_name;
 +  gsize user_name_len;
-   
--  read_file = get_fstab_file ();
-+  read_file = get_mtab_read_file ();
-   
-   file = setmntent (read_file, "re");
-   if (file == NULL)
-@@ -1176,6 +1179,15 @@ _g_get_unix_mount_points (void)
+ 
+   if (time_read_out != NULL)
+     *time_read_out = get_mount_points_timestamp ();
+@@ -1352,6 +1355,15 @@ _g_unix_mount_points_get_from_file (const char *table_path,
  	  )
  	is_user_mountable = TRUE;
  
@@ -48,3 +45,21 @@ index 1cfd25d9e7951832f3f7015acc2951b3890b53f5..69cc4a8bbbc3ab6b56e66e078383758e
        mount_point = create_unix_mount_point (device_path,
                                               mntent->mnt_dir,
                                               mntent->mnt_type,
+@@ -1381,7 +1393,7 @@ _g_get_unix_mount_points (void)
+   GUnixMountPoint **points = NULL;
+   size_t n_points = 0;
+ 
+-  points = _g_unix_mount_points_get_from_file (get_fstab_file (),
++  points = _g_unix_mount_points_get_from_file (get_mtab_read_file (),
+                                                NULL, &n_points);
+ 
+   return unix_mount_point_array_free_to_list (g_steal_pointer (&points), n_points);
+@@ -1796,7 +1808,7 @@ get_mount_points_timestamp (void)
+   const char *monitor_file;
+   struct stat buf;
+ 
+-  monitor_file = get_fstab_file ();
++  monitor_file = get_mtab_read_file ();
+   if (monitor_file)
+     {
+       if (stat (monitor_file, &buf) == 0)
