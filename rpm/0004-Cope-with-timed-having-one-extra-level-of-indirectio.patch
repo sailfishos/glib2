@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Thu, 9 Jan 2025 10:08:07 +0200
+Subject: [PATCH] Cope with timed having one extra level of indirection on
+ /etc/localtime
+
+Without this g_time_zone_new_local() was creating UTC timezone instances.
+
+With commit 6265b2e6f70d6f0 the code was made to ignore
+/etc/localtime pointing to symlinks, but even with that reverted it
+was resolving timezone with identifier as "/var/lib/timed/localtime"
+so there's been something wrong here longer than that.
+
+Adding here handling for one level of indirection.
+---
+ glib/gtimezone.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/glib/gtimezone.c b/glib/gtimezone.c
+index 2b7ed7b85..ed27cef70 100644
+--- a/glib/gtimezone.c
++++ b/glib/gtimezone.c
+@@ -546,7 +546,26 @@ zone_identifier_unix (void)
+ 
+       if (g_lstat (resolved_identifier, &file_status) == 0)
+         {
+-          if ((file_status.st_mode & S_IFMT) != S_IFREG)
++          if ((file_status.st_mode & S_IFMT) == S_IFLNK)
++            {
++              /* On Sailfish Timed uses one extra symlink, try to cope with that */
++              gchar *link_target = g_file_read_link (resolved_identifier, &read_link_err);
++              g_free (resolved_identifier);
++              resolved_identifier = link_target;
++
++              if (!resolved_identifier)
++                {
++                  g_clear_error (&read_link_err);
++                  not_a_symlink_to_zoneinfo = TRUE;
++                }
++              else if (g_lstat (resolved_identifier, &file_status) != 0)
++                {
++                  g_clear_pointer (&resolved_identifier, g_free);
++                  not_a_symlink_to_zoneinfo = TRUE;
++                }
++            }
++
++          if (!not_a_symlink_to_zoneinfo && (file_status.st_mode & S_IFMT) != S_IFREG)
+             {
+               /* Some systems (e.g. toolbox containers) make /etc/localtime be a symlink
+                * to a symlink.
