@@ -16,7 +16,7 @@ properly.
  1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
-index 1ebc9a7a179ffabbfb602f6577e1969df25a1009..8b02ec59cd731cfe77f28c3a54ff83df98f25c79 100644
+index 1ebc9a7a1..8b02ec59c 100644
 --- a/gio/gunixmounts.c
 +++ b/gio/gunixmounts.c
 @@ -1291,6 +1291,9 @@ _g_unix_mount_points_get_from_file (const char *table_path,
