@@ -17,7 +17,7 @@ Signed-off-by: Simon McVittie <smcv@collabora.com>
  1 file changed, 24 insertions(+), 2 deletions(-)
 
 diff --git a/gio/gdbusaddress.c b/gio/gdbusaddress.c
-index b73ff0d6e06b30957c29cde8c6f1cf9bd4a71f81..c1c0b5f3e53f344f7b4c052eed35a82a50aa7c4e 100644
+index b73ff0d6e..c1c0b5f3e 100644
 --- a/gio/gdbusaddress.c
 +++ b/gio/gdbusaddress.c
 @@ -1348,9 +1348,31 @@ g_dbus_address_get_for_bus_sync (GBusType       bus_type,
