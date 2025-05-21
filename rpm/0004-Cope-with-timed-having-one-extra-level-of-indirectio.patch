@@ -17,10 +17,10 @@ Adding here handling for one level of indirection.
  1 file changed, 20 insertions(+), 1 deletion(-)
 
 diff --git a/glib/gtimezone.c b/glib/gtimezone.c
-index 2b7ed7b85..ed27cef70 100644
+index b8eaf25d98ae60e4e4f2966c652582460c870d51..a958fe880a2e8bad510c44654d10f78d0e158a88 100644
 --- a/glib/gtimezone.c
 +++ b/glib/gtimezone.c
-@@ -546,7 +546,26 @@ zone_identifier_unix (void)
+@@ -544,7 +544,26 @@ zone_identifier_unix (void)
  
        if (g_lstat (resolved_identifier, &file_status) == 0)
          {
