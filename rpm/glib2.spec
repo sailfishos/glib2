@@ -1,9 +1,9 @@
 Name:       glib2
 Summary:    A library of handy utility functions
-Version:    2.82.4
+Version:    2.84.2
 Release:    1
 License:    LGPLv2+
-URL:        http://www.gtk.org
+URL:        https://github.com/sailfishos/glib2
 Source0:    %{name}-%{version}.tar.bz2
 Source1:    %{name}-rpmlintrc
 Source2:    glib2.sh
