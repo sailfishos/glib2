@@ -1,6 +1,6 @@
 Name:       glib2
 Summary:    A library of handy utility functions
-Version:    2.84.4
+Version:    2.86.3
 Release:    1
 License:    LGPLv2+
 URL:        https://github.com/sailfishos/glib2

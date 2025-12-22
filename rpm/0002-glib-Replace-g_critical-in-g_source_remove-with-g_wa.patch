@@ -12,10 +12,10 @@ it's not fatal.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/glib/gmain.c b/glib/gmain.c
-index 2a68313a2c303f1e8ccb2c4862dbb259b1b16a0b..c5970b10db7b324a055e0dd2c4ebfab49ee112d2 100644
+index 2d6501772eede0fc0509bdeeb4b4d1e7867cee4b..07c67dd1116fc64a464e9f4532c608170ff1d58e 100644
 --- a/glib/gmain.c
 +++ b/glib/gmain.c
-@@ -2556,7 +2556,7 @@ g_source_remove (guint tag)
+@@ -2713,7 +2713,7 @@ g_source_remove (guint tag)
    if (source)
      g_source_destroy (source);
    else
