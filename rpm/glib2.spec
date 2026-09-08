@@ -1,6 +1,6 @@
 Name:       glib2
 Summary:    A library of handy utility functions
-Version:    2.86.4
+Version:    2.88.3
 Release:    1
 License:    LGPLv2+
 URL:        https://github.com/sailfishos/glib2
@@ -11,8 +11,6 @@ Source3:    glib2.csh
 Patch1:     0001-detect-removable-storage-properly.-JB-48442.patch
 Patch2:     0002-glib-Replace-g_critical-in-g_source_remove-with-g_wa.patch
 Patch3:     0003-gdbus-Use-DBUS_SESSION_BUS_ADDRESS-if-AT_SECURE-but-.patch
-Patch4:     0004-Cope-with-timed-having-one-extra-level-of-indirectio.patch
-Patch5:     0005-gbufferedinputstream-Fix-a-potential-integer-overflo.patch
 BuildRequires: chrpath
 BuildRequires: gettext
 BuildRequires: perl
