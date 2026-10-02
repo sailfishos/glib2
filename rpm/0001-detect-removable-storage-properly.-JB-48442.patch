@@ -16,10 +16,10 @@ properly.
  1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
-index 54edc57ed1430345ca78bc17de710d19fcaa1a7e..b28a753b36d0d3bfaad754728cc9451c225df21b 100644
+index 014c4efe3ae391e4b93d912e40cc12d9156a4981..2faca4fce27027e61696a56f4c15bc506a64c680 100644
 --- a/gio/gunixmounts.c
 +++ b/gio/gunixmounts.c
-@@ -1300,6 +1300,9 @@ _g_unix_mount_points_get_from_file (const char *table_path,
+@@ -1262,6 +1262,9 @@ _g_unix_mount_points_get_from_file (const char *table_path,
    FILE *file;
    GUnixMountPoint *mount_point;
    GPtrArray *return_array = NULL;
@@ -29,7 +29,7 @@ index 54edc57ed1430345ca78bc17de710d19fcaa1a7e..b28a753b36d0d3bfaad754728cc9451c
  
    if (time_read_out != NULL)
      *time_read_out = get_mount_points_timestamp ();
-@@ -1361,6 +1364,15 @@ _g_unix_mount_points_get_from_file (const char *table_path,
+@@ -1323,6 +1326,15 @@ _g_unix_mount_points_get_from_file (const char *table_path,
  	  )
  	is_user_mountable = TRUE;
  
@@ -45,7 +45,7 @@ index 54edc57ed1430345ca78bc17de710d19fcaa1a7e..b28a753b36d0d3bfaad754728cc9451c
        mount_point = create_unix_mount_point (device_path,
                                               mntent->mnt_dir,
                                               mntent->mnt_type,
-@@ -1390,7 +1402,7 @@ _g_get_unix_mount_points (void)
+@@ -1352,7 +1364,7 @@ _g_get_unix_mount_points (void)
    GUnixMountPoint **points = NULL;
    size_t n_points = 0;
  
@@ -54,7 +54,7 @@ index 54edc57ed1430345ca78bc17de710d19fcaa1a7e..b28a753b36d0d3bfaad754728cc9451c
                                                 NULL, &n_points);
  
    return unix_mount_point_array_free_to_list (g_steal_pointer (&points), n_points);
-@@ -1805,7 +1817,7 @@ get_mount_points_timestamp (void)
+@@ -1767,7 +1779,7 @@ get_mount_points_timestamp (void)
    const char *monitor_file;
    struct stat buf;
  
