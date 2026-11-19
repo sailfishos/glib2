@@ -11,12 +11,16 @@ different results, namely with bind mounts.
 Additionally to using mtab instead of fstab also check whether the mount
 is in /run/media/$USER, in order to detect user removable storage
 properly.
+
+Use the mount-change timestamp for this live table so the mount point cache
+is invalidated when removable media is mounted or unmounted. The procfs
+modification time does not reflect these changes. JB#66008
 ---
- gio/gunixmounts.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ gio/gunixmounts.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/gio/gunixmounts.c b/gio/gunixmounts.c
-index 014c4efe3ae391e4b93d912e40cc12d9156a4981..2faca4fce27027e61696a56f4c15bc506a64c680 100644
+index 014c4efe3ae391e4b93d912e40cc12d9156a4981..478882d944cd861046e4c8d88838818a59a33b3f 100644
 --- a/gio/gunixmounts.c
 +++ b/gio/gunixmounts.c
 @@ -1262,6 +1262,9 @@ _g_unix_mount_points_get_from_file (const char *table_path,
@@ -54,12 +58,23 @@ index 014c4efe3ae391e4b93d912e40cc12d9156a4981..2faca4fce27027e61696a56f4c15bc50
                                                 NULL, &n_points);
  
    return unix_mount_point_array_free_to_list (g_steal_pointer (&points), n_points);
-@@ -1767,7 +1779,7 @@ get_mount_points_timestamp (void)
+@@ -1764,6 +1776,11 @@
+ static guint64
+ get_mount_points_timestamp (void)
+ {
++#if defined (HAVE_MNTENT_H) && !defined (HAVE_LIBMOUNT)
++  /* Mount points come from the live mount table, whose /proc mtime does
++   * not reflect mount changes. Use the same timestamp as mount entries. */
++  return get_mounts_timestamp ();
++#else
    const char *monitor_file;
    struct stat buf;
  
--  monitor_file = get_fstab_file ();
-+  monitor_file = get_mtab_read_file ();
-   if (monitor_file)
-     {
-       if (stat (monitor_file, &buf) == 0)
+@@ -1774,6 +1791,7 @@
+         return (guint64)buf.st_mtime;
+     }
+   return 0;
++#endif
+ }
+
+ /**
